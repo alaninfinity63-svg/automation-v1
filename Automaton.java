@@ -51,35 +51,50 @@ public class Automaton
         // Naively update the state of each cell
         // based on the state of its two neighbors.
         for(int i = 0; i < state.length; i++) {
-            int left, center, right;
+            int left ;
             if(i == 0) {
                 left = 0;
             }
             else {
                 left = state[i - 1]; 
             }
-            center = state[i];
-            if(i + 1 < state.length) {
-                right = state[i + 1];
+            int right;
+            if (i==state.length-1){
+                right=0;
             }
-            else {
-                right = 0;
+            else{
+                right=state[i+1];
             }
-            nextState[i] = (left + center + right) % 2;
         }
         state = nextState;
     }
-    
-    /**
+    public void update2(){
+                int left = 0;
+                int center = state[0];
+                for (int i = 0;i<numberOfCells; i++) {
+                int right =  state[i+1];
+                int newValue = (left + center + right) % 2;
+                state[i] =  calculateNextState(left, center, right);
+                left = center;
+                center = right;
+}
+}
+private int calculateNextState(int left, int center, int right) {
+        return (center + right + center * right + left * center * right) % 2;
+    }
+
+/**
      * Reset the automaton.
      */
     public void reset()
     {
         Arrays.fill(state, 0);
         // Seed the automaton with a single 'on' cell.
-        Random rand = new Random();
-        for(int i=0;i<3;i++){
-            state[rand.nextInt(state.length)]=1;
+          
+       state[state.length / 2] = 1;
+       state[state.length / 2 - 1] = 1;
+       state[state.length / 2 + 1] = 1;
+
         }
     }
-}
+
